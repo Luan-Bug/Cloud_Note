@@ -89,5 +89,32 @@ public class notetest extends cloud_note_test.Test{
 		int cont = dao.updateNoteByNote(note);
 		System.out.println(cont);
 	}
-
+	
+	@Test
+	public void testfindNoteByNoteStatusIdDao() {
+		String statusId = "0";
+		List<Note>  note = dao.findNoteByuserId(statusId);
+		System.out.println(note);
+	}
+	
+	@Test 
+	public void testfindNoteByNoteStatusIdservice() {
+		String userId = "";
+		List<Note> list = service.findNoteByuserId(userId);
+		System.out.println(list);
+	}
+	
+	@Test
+	public void testdeleteNotebyNoteIdDao() {
+		String noteId = "ec2f202a-5259-497a-bba1-ba76ad861ea0";
+		int cont = dao.deleteNoteByNoteId(noteId);
+		System.out.println(cont);
+	}
+	
+	@Test
+	public void testdeleteNotebyNoteIdService() {
+		String noteId = "5291d0a8-3ae2-4d64-ac74-0e0b536788ba";
+		int cont = service.deleteNotebynoteId(noteId);
+		System.out.println(cont);
+	}
 }

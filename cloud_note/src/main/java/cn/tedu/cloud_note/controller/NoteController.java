@@ -67,6 +67,21 @@ public class NoteController extends AbstractController {
 		boolean success = noteservice.deleteNote(noteId);
 		return new JSONResult(success);
 	}
+	
+	@RequestMapping("/recycle.do")
+	@ResponseBody
+	public Object recycle(String userId){
+		List<Note> noteslist = noteservice.findNoteByuserId(userId);
+		return new JSONResult(noteslist);
+	}
+	
+	@RequestMapping("/clear.do")
+	@ResponseBody
+	public Object clear(String noteId) {
+		int success = noteservice.deleteNotebynoteId(noteId);
+		return new JSONResult(success);
+	}
+	
 	/**
 	 *	≤È—Ø± º«“Ï≥£ 
 	 * 

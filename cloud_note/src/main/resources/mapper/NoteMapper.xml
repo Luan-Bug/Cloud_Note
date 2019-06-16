@@ -35,6 +35,29 @@
 			cn_note_id=#{id}
 	</select>
 	
+	<select id="findNoteByuserId" 
+						parameterType="string"
+						resultType="cn.tedu.cloud_note.entity.Note">
+		select 
+			cn_note_id as id,
+			cn_notebook_id as notebookId,
+			cn_user_id as userId,
+			cn_note_status_id as statusId,
+			cn_note_type_id as typeId,
+			cn_note_title as title,
+			cn_note_body as body,
+			cn_note_create_time as createTime,
+			cn_note_last_modify_time as lastModifyTime
+		from 
+			cn_note 
+		where 
+			cn_note_status_id='0' and 
+			cn_user_id = #{userId}
+		order by
+        	cn_note_last_modify_time desc
+		
+	</select>
+	
 	<select id="findNoteByNoteId" parameterType="string" 
 							resultType="cn.tedu.cloud_note.entity.Note">
 		select
@@ -102,5 +125,12 @@
         	cn_note_id=#{id} 
 		
 	</update>
+	
+	<delete id="deleteNoteByNoteId" parameterType="string">
+		delete from 
+			cn_note 
+		where 
+			cn_note_id=#{noteId}
+	</delete>
 </mapper>
 

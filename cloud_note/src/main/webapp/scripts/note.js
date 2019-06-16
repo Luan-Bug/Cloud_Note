@@ -40,7 +40,103 @@ $(function(){
 	
 	//监听删除笔记对话框中的确定按钮
 	$('#can').on('click', '.delete-note', deleteNote);
+	
+	//监听回收站按钮被点击
+	$('#trash_button').click(showTrashBin);
+	
+	//清除笔记事件
+	$('#trash-bin').on(
+		    'click', '.btn_delete', showDeleterollbackNoteDialog);
+	//监听清除笔记对话框中的确定按钮
+	$('#can').on('click', '.deleterollback-note', deleterollbackNote);
+	
 });
+
+//清除笔记本事件
+function showDeleterollbackNoteDialog() {
+	console.log("delete");
+	$('#can').load('./alert/alert_delete_rollback.html');
+	var li = $(this).parent().parent();
+	//将Id数据绑定到document上，删除笔记需要用到
+	var noteId = li.data('noteId');
+	$(document).data('noteId',noteId);
+	$(this).addClass('chicked');
+	//console.log(li.data('noteId'));
+}
+function deleterollbackNote() {
+	var noteId = $(document).data('noteId');
+	console.log(noteId);
+	//console.log("rollebacknote");
+	var url = 'note/clear.do';
+	var data = {
+			noteId:noteId
+	};
+	$.post(url,data,function(result){
+		if(result.state==SUCCESS){
+			//删除成功将页面上的记录删除
+			console.log(result);
+			var li = $('#trash-bin .chicked').parent().parent();
+            var lis = li.siblings();
+            if(lis.size()>0){
+                lis.eq(0).click();
+            }else{
+                $('#input_note_title').val("");
+                um.setContent("");
+            }
+            li.remove();
+            closeDialog();//关闭对话框!
+		} else {
+			console.log(result.message);
+		}
+	});
+}
+
+
+/** 监听回收站按钮被点击 */
+function showTrashBin(){
+	console.log("showTrashBin");
+    $('#trash-bin').show() ;
+    $('#note_list').hide() ;
+    loadTrashBin(); //加载删除笔记列表
+}
+
+function loadTrashBin() {
+	 var url = 'note/recycle.do';
+	    var data = {userId: getCookie('userId')};
+	    $.getJSON(url, data, function(result){
+	        if(result.state==SUCCESS){
+	            showNotesInTrashBin(result.data);
+	        }else{
+	            alert(result.message);
+	        }
+	    });
+}
+function showNotesInTrashBin(notes){
+    var ul = $('#trash-bin ul');
+    ul.empty();
+    for(var i=0; i<notes.length; i++){
+        var note = notes[i];
+        var li = trashBinItem.replace('[title]', note.title);
+        li = $(li);
+        li.data('noteId', note.id);
+        var id = li.data('noteId');
+       // console.log(id);
+        ul.append(li);
+    }
+}
+
+var trashBinItem = 
+			    '<li class="disable">'+
+			        '<a><i class="fa fa-file-text-o" title="online" rel="tooltip-bottom"></i>'+
+			        ' [title]'+
+			        '<button type="button" class="btn btn-default btn-xs btn_position btn_delete">'+
+			            '<i class="fa fa-times"></i>'+
+			        '</button>'+
+			        '<button type="button" class="btn btn-default btn-xs btn_position_2 btn_replay">'+
+			            '<i class="fa fa-reply"></i>'+
+			        '</button></a>'+
+			    '</li>';
+
 
 //删除笔记事件
 function showDeleteNoteDialog() {
@@ -60,7 +156,7 @@ function deleteNote() {
 	$.post(url,data,function(result){
 		 if(result.state==SUCCESS){
 	            //删除成功, 在当前笔记列表中删除笔记
-	            //将笔记列表中的第一个设置为当前笔记, 否则清空边编辑区域
+	            //将笔记列表中的第一个设置为当前笔记, 否则清空编辑区域
 	            var li = $('#note_list .checked').parent();
 	            var lis = li.siblings();
 	            if(lis.size()>0){
@@ -342,6 +438,10 @@ function showNote(note){
 
 /** 笔记本项目点击事件处理方法，加载全部笔记列表*/
 function loadNotes(){
+	 
+	 $('#trash-bin').hide() ;
+	 $('#note_list').show() ;
+	
 	//当前被点击的对象
 	var li = $(this);
 	

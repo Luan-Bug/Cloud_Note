@@ -11,4 +11,6 @@ public interface NoteDao {
 	int addNote(Note note);
 	int updateNoteByNote(Note note);
 	Note findNoteByNoteId(String noteId);
+	List<Note> findNoteByuserId(String statusId);
+	int deleteNoteByNoteId(String noteId);
 }

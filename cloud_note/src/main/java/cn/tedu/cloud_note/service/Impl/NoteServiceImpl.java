@@ -130,4 +130,30 @@ public class NoteServiceImpl implements NoteService {
 	    return n==1;   
 	}
 
+	@SuppressWarnings("null")
+	public List<Note> findNoteByuserId(String userId) throws BookError {
+		if(userId==null && userId.trim().isEmpty()) {
+			throw new BookError("ID空");
+		}
+		User user = userDao.FindUserById(userId);
+		if(user==null) {
+			throw new BookError("没有这个人");
+		}
+		List<Note> noteslist = 
+				notedao.findNoteByuserId(userId);
+		return noteslist;
+	}
+	
+	public int deleteNotebynoteId(String noteId) {
+		if (noteId==null) {
+			throw new BookError("ID空");
+		}
+		Note note = notedao.findNoteByNoteId(noteId);
+		System.out.println(note);
+		if(note==null) {
+			throw new BookError("笔记不存在");
+		}
+		int cont = notedao.deleteNoteByNoteId(noteId);
+		return cont;
+	}
 }
