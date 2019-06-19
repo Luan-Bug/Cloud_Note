@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
-
 import org.springframework.stereotype.Service;
 
 import cn.tedu.cloud_note.dao.NoteDao;
@@ -154,6 +153,21 @@ public class NoteServiceImpl implements NoteService {
 			throw new BookError("笔记不存在");
 		}
 		int cont = notedao.deleteNoteByNoteId(noteId);
+		return cont;
+	}
+
+	public int reovkeNote(String noteId,String nId) {
+		if(noteId==null){
+			throw new BookError("笔记ID跑丢了");
+		}
+		Note note = notedao.findNoteBodyByNoteId(noteId);
+		if(note==null) {
+			throw new BookError("没有这个笔记，出了个小bug");
+		}
+		String statusId = "1";
+		note.setNotebookId(nId);
+		note.setStatusId(statusId);
+		int cont = notedao.updateNoteByNote(note);
 		return cont;
 	}
 }

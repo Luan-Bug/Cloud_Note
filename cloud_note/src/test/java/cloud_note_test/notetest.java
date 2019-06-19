@@ -117,4 +117,12 @@ public class notetest extends cloud_note_test.Test{
 		int cont = service.deleteNotebynoteId(noteId);
 		System.out.println(cont);
 	}
+	
+	@Test
+	public void testreovkeNotesevice() {
+		String noteId = "594668cf-5a88-41bf-90ea-23014d9e7428";
+		String nId = "11";
+		int cont = service.reovkeNote(noteId,nId);
+		System.out.println(cont);
+	}
 }

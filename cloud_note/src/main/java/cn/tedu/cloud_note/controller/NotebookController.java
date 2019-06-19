@@ -19,7 +19,7 @@ import cn.tedu.cloud_note.uitl.JSONResult;
 
 @Controller
 @RequestMapping("/notebook")
-public class NotebookController extends AbstractController {
+public class NotebookController {
 
 	@Resource
 	protected NotebookService notebookservice;

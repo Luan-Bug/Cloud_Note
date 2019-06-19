@@ -1,6 +1,7 @@
 package cn.tedu.cloud_note.controller;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,9 +25,12 @@ public class UserController extends AbstractController{
 	@RequestMapping("/login.do")
 	@ResponseBody
 	public Object login (
-			String name,String password) {
+			String name,String password,HttpSession session) {
 			User user = userservice.Login(name, password);
-			System.out.println(new JSONResult(user));
+			//System.out.println(new JSONResult(user));
+			//登录成功时候, 将user信息保存到session
+		    //用于在过滤器中检查登录情况
+		    session.setAttribute("loginUser", user); 
 			return new JSONResult(user);
 	}
 	
@@ -38,6 +42,12 @@ public class UserController extends AbstractController{
 		return new JSONResult(user);
 	}
 	
+	@RequestMapping("/heartbeat.do")
+	@ResponseBody
+	public Object heartbeat(){
+	    Object ok = "ok";
+	    return new JSONResult(ok);
+	}
 	
 	/*
 	 *处理注册时账号异常 
@@ -48,6 +58,7 @@ public class UserController extends AbstractController{
 	public JSONResult handleUserNameException(Exception e) {
 		return new JSONResult(4,e);
 	}
+	
 	/*
 	 *  处理账号异常
 	 * 

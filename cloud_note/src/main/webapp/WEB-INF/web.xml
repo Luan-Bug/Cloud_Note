@@ -51,4 +51,13 @@
        <url-pattern>/*</url-pattern> 
    </filter-mapping> 
    	
+   	<filter>
+	    <display-name>AccessFilter</display-name>
+	    <filter-name>AccessFilter</filter-name>
+	    <filter-class>cn.tedu.cloud_note.web.AccessFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>AccessFilter</filter-name>
+	    <url-pattern>*.html</url-pattern>
+	</filter-mapping>
 </web-app>

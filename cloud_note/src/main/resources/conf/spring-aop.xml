@@ -14,35 +14,13 @@
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd"
->
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 		 <!-- 配置注解扫描 -->
-		<context:component-scan base-package="cn.tedu.cloud_note"/>
-		<mvc:annotation-driven/>
-		<!-- 配置拦截器 -->
-		<mvc:interceptors>
-		    <mvc:interceptor>
-		        <mvc:mapping path="/note/*"/>
-		        <mvc:mapping path="/notebook/*"/>
-		        <ref bean="accessInterceptor"/> 
-		    </mvc:interceptor>
-		</mvc:interceptors> 
-		<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-			<property name="prefix" 
-				value="/WEB-INF/"/>
-			<property name="suffix"
-				value=".jsp"/>
-		</bean>
+		 <context:component-scan base-package="cn.tedu.cloud_note.aop"/>
+		 
+		<!-- 使@Aspect注解生效 -->
+		<aop:aspectj-autoproxy/>
 		
-		<!-- 配置简单异常处理器 -->
-		<!--  
-			<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-			<property name="exceptionMappings">
-				<props>
-					<prop key="java.lang.NumberFormatException">error1</prop>
-					<prop key="java.lang.StringIndexOutOfBoundsException">error2</prop>
-				</props>
-			</property>
-			</bean>
-		-->
+		
+		
 </beans>

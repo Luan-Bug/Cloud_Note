@@ -20,4 +20,6 @@ public interface NoteService {
 			throws BookError;
 	int deleteNotebynoteId(String noteId)
 			throws BookError;
+	int reovkeNote(String noteId,String nId)
+			throws BookError;
 }

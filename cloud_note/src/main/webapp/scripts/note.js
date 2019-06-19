@@ -50,11 +50,89 @@ $(function(){
 	//监听清除笔记对话框中的确定按钮
 	$('#can').on('click', '.deleterollback-note', deleterollbackNote);
 	
+	//撤销删除事件
+	$('#trash-bin').on(
+		    'click', '.btn_replay', showReplayDialog);
+	$('#can').on('click', '.btn-replay', replayNote);
+	
+	startHeartbeat();
 });
+/**
+ * 心跳检查
+ * */
+function startHeartbeat(){
+    var url = "user/heartbeat.do";
+    setInterval(function(){
+        $.getJSON(url, function(result){
+            console.log(result.data);
+        });
+    }, 5000);
+}
+
+/** 显示恢复笔记对话框 */
+function showReplayDialog(){
+    var li = $(this).parent().parent();
+    var id = li.data('noteId');
+
+    $(document).data('replayItem', li);
+
+    if(id){
+        $('#can').load('alert/alert_replay.html', loadReplayOptions);
+        $('.opacity_bg').show();
+        return;
+    }
+    alert('必须选择笔记!');
+}
+function loadReplayOptions(){
+    var url = 'notebook/list.do';
+    var data={userid:getCookie('userId')};
+    $.getJSON(url, data, function(result){
+        if(result.state==SUCCESS){
+            var notebooks = result.data;
+            //清楚全部的笔记本下拉列表选项
+            //添加新的笔记本列表选项
+            $('#replaySelect').empty();
+            var id=$(document).data('notebookId');
+            //console.log(notebooks);
+            for(var i=0; i<notebooks.length; i++){
+                var notebook = notebooks[i];
+                var opt=$('<option></option>')
+                    .val(notebook.id)
+                    .html(notebook.name);
+                //console.log(notebook);
+                //默认选定当时笔记的笔记本ID
+                if(notebook.id==id){
+                    opt.attr('selected','selected');
+                }
+                $('#replaySelect').append(opt);
+            }
+        }else{
+            alert(result.message);
+        }
+    });
+
+}
+
+function replayNote(){
+    var li = $(document).data('replayItem');
+    var noteId = li.data('noteId');
+    var url = 'note/replay.do';
+    var nId = $('#replaySelect').val();
+    var data = {noteId:noteId, notebookId:nId};
+    //console.log(data);
+    $.post(url, data, function(result){
+        if(result.state==SUCCESS){
+            closeDialog();
+            li.slideUp(200, function(){$(this).remove()});
+        }else{
+            alert(result.message);
+        }
+    });
+}
 
 //清除笔记本事件
 function showDeleterollbackNoteDialog() {
-	console.log("delete");
+	//console.log("delete");
 	$('#can').load('./alert/alert_delete_rollback.html');
 	var li = $(this).parent().parent();
 	//将Id数据绑定到document上，删除笔记需要用到
@@ -65,7 +143,7 @@ function showDeleterollbackNoteDialog() {
 }
 function deleterollbackNote() {
 	var noteId = $(document).data('noteId');
-	console.log(noteId);
+	//console.log(noteId);
 	//console.log("rollebacknote");
 	var url = 'note/clear.do';
 	var data = {
@@ -74,7 +152,7 @@ function deleterollbackNote() {
 	$.post(url,data,function(result){
 		if(result.state==SUCCESS){
 			//删除成功将页面上的记录删除
-			console.log(result);
+			//console.log(result);
 			var li = $('#trash-bin .chicked').parent().parent();
             var lis = li.siblings();
             if(lis.size()>0){
@@ -94,7 +172,7 @@ function deleterollbackNote() {
 
 /** 监听回收站按钮被点击 */
 function showTrashBin(){
-	console.log("showTrashBin");
+	//console.log("showTrashBin");
     $('#trash-bin').show() ;
     $('#note_list').hide() ;
     loadTrashBin(); //加载删除笔记列表
@@ -132,7 +210,7 @@ var trashBinItem =
 			        '<button type="button" class="btn btn-default btn-xs btn_position btn_delete">'+
 			            '<i class="fa fa-times"></i>'+
 			        '</button>'+
-			        '<button type="button" class="btn btn-default btn-xs btn_position_2 btn_replay">'+
+			        '<button type="button" class="btn btn-default btn-xs btn_position_2 btn_replay" id="btn_replay">'+
 			            '<i class="fa fa-reply"></i>'+
 			        '</button></a>'+
 			    '</li>';

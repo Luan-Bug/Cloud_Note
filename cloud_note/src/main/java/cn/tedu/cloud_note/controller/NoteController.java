@@ -82,17 +82,24 @@ public class NoteController extends AbstractController {
 		return new JSONResult(success);
 	}
 	
+	@RequestMapping("/replay.do")
+	@ResponseBody
+	public Object revoke(String noteId,String notebookId) {
+		int success = noteservice.reovkeNote(noteId,notebookId);
+		return new JSONResult(success);
+	}
+	
 	/**
 	 *	≤È—Ø± º«“Ï≥£ 
 	 * 
 	 */
+	
 	@ExceptionHandler(BookError.class)
 	@ResponseBody
 	public JSONResult handlerNoteException(Exception e) {
 		System.out.println(e);
 		return new JSONResult(5,e);
 	}
-	
 	
 	
 }
