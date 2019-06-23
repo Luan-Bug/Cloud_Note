@@ -6,11 +6,14 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.tedu.cloud_note.dao.NoteDao;
 import cn.tedu.cloud_note.dao.NotebookDao;
+import cn.tedu.cloud_note.dao.StarsDao;
 import cn.tedu.cloud_note.dao.UserDao;
 import cn.tedu.cloud_note.entity.Note;
+import cn.tedu.cloud_note.entity.Stars;
 import cn.tedu.cloud_note.entity.User;
 import cn.tedu.cloud_note.service.BookError;
 import cn.tedu.cloud_note.service.NoteService;
@@ -25,6 +28,8 @@ public class NoteServiceImpl implements NoteService {
 	UserDao userDao;
 	@Resource
 	NotebookDao notebookDao;
+	@Resource
+	StarsDao starsDao;
 	
 	public List<Map<String, Object>> findNoteByNoteBookId(String id) {
 		if(id==null) {
@@ -44,7 +49,8 @@ public class NoteServiceImpl implements NoteService {
 		return notebody;
 	
 	}
-
+	
+	@Transactional
 	public Note addNote(String userId, String notebookId, String title) 
 						throws 
 						UserNotFoundException, 
@@ -75,9 +81,12 @@ public class NoteServiceImpl implements NoteService {
 			userId, statusId, typeId, title, 
 			body, time, time);
 		n = notedao.addNote(note);
+		addStars(userId, 3);
 		if(n!=1){
 			throw new BookError("保存失败");
 		}
+		//当前的事务会传播到addstart方法中
+		//会整合成一个事务
 		return note;
 	}
 
@@ -169,5 +178,42 @@ public class NoteServiceImpl implements NoteService {
 		note.setStatusId(statusId);
 		int cont = notedao.updateNoteByNote(note);
 		return cont;
+	}
+	
+	@Transactional
+	public boolean addStars(String userId, int stars) throws BookError {
+		if(userId==null && userId.trim().isEmpty()) {
+			throw new BookError("ID空");
+		}
+		User user = userDao.FindUserById(userId);
+		if(user==null) {
+			throw new BookError("没有这个人");
+		}
+		//检查是否已经有积分了
+		Stars st = starsDao.findStarsByuUserId(userId);
+		System.out.println(st);
+		if(st==null) {
+			String id = UUID.randomUUID().toString();
+			Stars star = new Stars();
+			star.setId(id);
+			star.setUserId(userId);
+			star.setStars(stars);
+			int n = starsDao.insertStars(star);
+			System.out.println(n);
+			if(n!=1) {
+				throw new RuntimeException("添加失败");
+			}
+		}else {
+			int n = st.getStars()+stars;
+			if(n<0){
+				throw new BookError("扣得分太多了");
+			}
+			st.setStars(n);
+			n = starsDao.updataStars(st);
+			if(n!=1) {
+				throw new RuntimeException("更新失败");
+			}
+		}
+		return true;
 	}
 }

@@ -19,22 +19,22 @@ import cn.tedu.cloud_note.service.UserNotFoundException;
 public class DemoAspect {
 	
 	//声明test方法将在userService的全部方法之前执行
-	@Before("bean(userService)")
+	//@Before("bean(userService)")
 	public void test() {
 		System.out.println("hello world");
 	}
 	//声明test2方法将在userService的全部方法之后执行
-	@After("bean(userService)")
+	//@After("bean(userService)")
 	public void test2() {
 		System.out.println("after");
 	}
 	
-	@AfterReturning("bean(userService)")
+	//@AfterReturning("bean(userService)")
 	public void test3() {
 		System.out.println("afterReturning");
 	}
 	
-	@AfterThrowing("bean(userService)")
+	//@AfterThrowing("bean(userService)")
 	public void test4() {
 		System.out.println("afterThrowing");
 	}
@@ -58,4 +58,6 @@ public class DemoAspect {
 		System.out.println("业务结果"+val);
 		throw new UserNotFoundException("没有找到用户123");
 	}
+	
+	
 }

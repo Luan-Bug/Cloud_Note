@@ -22,4 +22,6 @@ public interface NoteService {
 			throws BookError;
 	int reovkeNote(String noteId,String nId)
 			throws BookError;
+	boolean addStars(String userId,int stars)
+			throws BookError;
 }
