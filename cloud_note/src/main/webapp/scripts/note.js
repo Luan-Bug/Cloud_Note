@@ -3,10 +3,15 @@ var SUCCESS = 0;
 var ERROR = 1;
 
 $(function(){
+	
+	
 	var userId = getCookie('userId');
 	
 	//网页加载以后，立即读取笔记本列表
-	loadNotebooks();
+	//loadNotebooks();
+	//将初始页号page绑定到document上
+	$(document).data('page',0);
+	loadPagedNotebooks();
 	//绑定笔记本单击事件显示笔记列表
 	$('#notebook-list').on('click','.notebook',loadNotes);
 	
@@ -44,6 +49,9 @@ $(function(){
 	//监听回收站按钮被点击
 	$('#trash_button').click(showTrashBin);
 	
+	//记载更多按钮被点击
+	$('#notebook-list').on('click','.more',loadPagedNotebooks);
+	
 	//清除笔记事件
 	$('#trash-bin').on(
 		    'click', '.btn_delete', showDeleterollbackNoteDialog);
@@ -57,6 +65,55 @@ $(function(){
 	
 	startHeartbeat();
 });
+
+function loadPagedNotebooks(){
+	console.log('more');
+	var page = $(document).data('page');
+	var userId = getCookie('userId');
+	var url = 'notebook/page.do';
+	var data = {
+			userId:userId,
+			page:page
+	};
+	$.getJSON(url,data,function(result){
+		console.log(result);
+		if(result.state==SUCCESS){
+			var notebooks = result.data;
+			showPagedNotebooks(notebooks,page);
+			$(document).data('page',page+1);
+		}
+	});
+}
+
+function showPagedNotebooks(notebooks,page){
+	var ul = $('#notebook-list ul');
+	console.log(ul);
+	if(page==0){
+		ul.empty();
+	}else {
+		//删除下一页按钮
+		ul.find('.more').remove();
+	}
+	
+	for (var i = 0; i < notebooks.length; i++) {
+		var notebook = notebooks[i];
+		var li = notebookTemplate.replace('[name]',notebook.name);
+		console.log(li);
+		var li = $(li);
+		//将notebook.id绑定到li上
+		li.data('notebookId',notebook.id);
+		ul.append(li);
+	}
+	if(notebooks.length != 0){
+		ul.append(moreTemplate);
+	}
+	
+}
+var moreTemplate = '<li class="online more"> '+
+					'<a>'+
+					'<i class="fa fa-plus" title="online" rel="tooltip-bottom"> '+
+					'</i>加载更多...</a></li>';
+
 /**
  * 心跳检查
  * */
@@ -64,7 +121,7 @@ function startHeartbeat(){
     var url = "user/heartbeat.do";
     setInterval(function(){
         $.getJSON(url, function(result){
-            console.log(result.data);
+            //console.log(result.data);
         });
     }, 5000);
 }

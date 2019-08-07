@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>自定义图片</h1>
+	<p>
+		Servlet处理自定义图片<br>
+		<img alt="" src="demoimg">
+	</p>
+	
+	<p>
+		SpringMVC处理自定义图片<br>
+		<img alt="" src="user/image.do">
+	</p>
+	<h1>Spring下载图片</h1>
+	<a href="user/downloadimg.do">下载</a>
+	<h1>下载表格</h1>
+	<a href="user/downloadexcel.do">下载</a>
+	
+	<h2>文件上载</h2>
+	<form enctype="multipart/form-data" 
+			action="user/uploadimg.do" 
+			method=post>  
+		load multi files :<br>    
+		<input name="userfile1" type="file"><br>   
+		<input name="userfile2" type="file"><br>   
+		<input type="submit" value="提交"><input type=reset>
+	</form> 
+</body>
+</html>

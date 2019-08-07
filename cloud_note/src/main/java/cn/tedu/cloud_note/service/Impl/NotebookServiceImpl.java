@@ -8,7 +8,9 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.tedu.cloud_note.dao.NotebookDao;
 import cn.tedu.cloud_note.dao.UserDao;
@@ -19,12 +21,15 @@ import cn.tedu.cloud_note.service.NotebookService;
 import cn.tedu.cloud_note.service.UserNotFoundException;
 
 @Service("notebookservice")
+@Transactional
 public class NotebookServiceImpl implements NotebookService {
 	
 	@Resource
 	NotebookDao notebookDao;
 	@Resource
 	UserDao userDao;
+	
+	private int pageSize;
 	
 	public List<Map<String, Object>> findNotebookByUserId(String userid) {
 		User user = userDao.FindUserById(userid);
@@ -60,5 +65,20 @@ public class NotebookServiceImpl implements NotebookService {
 			return book;
 		}
 		
+	}
+
+	public List<Map<String, Object>> 
+		findNotebookByUserId(String id, int page) 
+				throws UserNotFoundException {
+		User user = userDao.FindUserById(id);
+		if(user==null) {
+			throw new UserNotFoundException("用户不存在");
+		}
+		
+		pageSize = 4;
+		int statr = page * pageSize;
+		String table = "cn_notebook";
+		List<Map<String , Object>> list = notebookDao.findNotebookByPage(id, statr, pageSize, table);
+		return list;
 	}
 }

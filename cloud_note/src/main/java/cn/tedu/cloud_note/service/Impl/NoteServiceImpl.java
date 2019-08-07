@@ -152,16 +152,22 @@ public class NoteServiceImpl implements NoteService {
 		return noteslist;
 	}
 	
-	public int deleteNotebynoteId(String noteId) {
-		if (noteId==null) {
+	public int deleteNotebynoteId(String... noteIds) {
+		if (noteIds==null) {
 			throw new BookError("ID空");
 		}
-		Note note = notedao.findNoteByNoteId(noteId);
-		System.out.println(note);
-		if(note==null) {
-			throw new BookError("笔记不存在");
+		int cont=0;
+		for(int i=0;i<noteIds.length;i++) {
+			String noteId = noteIds[i];
+			Note note = notedao.findNoteByNoteId(noteId);
+			System.out.println(note);
+			if(note==null) {
+				throw new BookError("笔记不存在");
+			}
+			cont = notedao.deleteNoteByNoteId(noteId);
+			++cont;
+			
 		}
-		int cont = notedao.deleteNoteByNoteId(noteId);
 		return cont;
 	}
 

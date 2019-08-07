@@ -125,4 +125,23 @@ public class notetest extends cloud_note_test.Test{
 		int cont = service.reovkeNote(noteId,nId);
 		System.out.println(cont);
 	}
+	
+	@Test 
+	public void testfindNotes() {
+		String userId = "39295a3d-cc9b-42b4-b206-a2e7fab7e77c";
+		String notebookId = null;
+		String statusId = "1";
+		
+		List<Map<String, Object>> list = dao.findNotes(userId, notebookId, statusId);
+		System.out.println(list);
+	}
+	
+	@Test
+	public void testdeleteNotes() {
+		String id1 = "003ec2a1-f975-4322-8e4d-dfd206d6ac0c";
+		String id2 = "019cd9e1-b629-4d8d-afd7-2aa9e2d6afe0";
+		String id3 = "01da5d69-89d5-4140-9585-b559a97f9cb0";
+		int n = dao.deleteNotes(id1,id2,id3);
+		System.out.println(n);
+	}
 }

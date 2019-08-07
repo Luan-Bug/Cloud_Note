@@ -9,55 +9,54 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
   <servlet>
-		    <servlet-name>springmvc</servlet-name>
-		    <servlet-class>
-		             org.springframework.web.servlet.DispatcherServlet
-		    </servlet-class>
-		    <!-- 
-		    	DispatcherServlet的初始化方法会启动
-		    	spring容器，contextConfigLocation用
-		    	来指定spring配置文件的位置。
-		     -->
-		    <init-param>
-		        <param-name>contextConfigLocation</param-name>
-		        <param-value>classpath:/conf/spring-*.xml</param-value>
-		    </init-param>
-		    <load-on-startup>1</load-on-startup>
-	</servlet>
-	  
-	<servlet-mapping>
-	    <servlet-name>springmvc</servlet-name>
-	    <url-pattern>*.do</url-pattern>
-	</servlet-mapping>
-	
-	<filter> 
-       <filter-name>characterEncodingFilter</filter-name> 
-       <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class> 
-       <init-param> 
-           <param-name>encoding</param-name> 
-           <param-value>UTF-8</param-value> 
-       </init-param> 
-       
-       <init-param> 
-           <param-name>forceEncoding</param-name> 
-           <param-value>true</param-value> 
-       </init-param> 
-   </filter> 
-   
-   <filter-mapping> 
-       <filter-name>characterEncodingFilter</filter-name> 
-       <url-pattern>/*</url-pattern> 
-   </filter-mapping> 
-   	
-   	<filter>
-	    <display-name>AccessFilter</display-name>
-	    <filter-name>AccessFilter</filter-name>
-	    <filter-class>cn.tedu.cloud_note.web.AccessFilter</filter-class>
-	</filter>
-	<filter-mapping>
-	    <filter-name>AccessFilter</filter-name>
-	    <url-pattern>*.html</url-pattern>
-	</filter-mapping>
+    <servlet-name>springmvc</servlet-name>
+    	<servlet-class>
+		      org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:/conf/spring-*.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springmvc</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <display-name>AccessFilter</display-name>
+    <filter-name>AccessFilter</filter-name>
+    <filter-class>cn.tedu.cloud_note.web.AccessFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AccessFilter</filter-name>
+    <url-pattern>*.html</url-pattern>
+  </filter-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ImageServlet</display-name>
+    <servlet-name>ImageServlet</servlet-name>
+    <servlet-class>cn.tedu.cloud_note.web.ImageServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ImageServlet</servlet-name>
+    <url-pattern>/demoimg</url-pattern>
+  </servlet-mapping>
 </web-app>

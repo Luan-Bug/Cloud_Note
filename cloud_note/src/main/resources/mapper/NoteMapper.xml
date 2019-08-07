@@ -132,5 +132,62 @@
 		where 
 			cn_note_id=#{noteId}
 	</delete>
+	
+	<!-- 多条件查询 -->
+	
+	<select id="findNotes" resultType="map">
+		select
+			cn_note_id as id,
+			cn_notebook_id as notebookId,
+			cn_user_id as userId,
+			cn_note_status_id as statusId,
+			cn_note_type_id as typeId,
+			cn_note_title as title,
+			cn_note_body as body,
+			cn_note_create_time as createTime,
+			cn_note_last_modify_time as lastModifyTime
+		from 
+			cn_note
+		<where>
+			<!-- <trim>标签去除多余的符号，
+				列如prefixOverrides="and"，是去除后面的多余and -->
+			<!-- <foreach collection=""></foreach>
+				
+				
+			-->
+			<trim prefixOverrides="and" >
+				<if test="userId!=null">
+					cn_user_id = #{userId} and
+				</if>
+				<if test="notebookId != null">
+					cn_notebook_id = #{notebookId}
+				</if>
+				cn_note_status_id = #{statusId}
+			</trim>
+		</where> 
+	</select>
+	
+	<!-- 当写了接口参数写了@parame以映射文件的sql语句内参数类型可以不写，即 parameterType可以不写-->
+	<delete id="deleteNotes">
+		delete from 
+			cn_note 
+		where 
+			cn_note_id in 
+			<foreach collection="ids"
+					item="id"
+					open="(" separator="," close=")">
+				#{id}
+			</foreach>
+			<!-- 加上<foreach></foeach>后相当于最后生成的sql语句
+				where cn_note_id in (id1,id2,id3,...)
+				参数：collection=  接口@parame内参数的名字可以是数组，多个同类型参数，集合
+					 item= 单个参数的名字
+					 open= 拼接sql语句需要的开始字符，这里是(
+					 separator= sql语句的分隔符，这里是，
+					 close= 拼接sql语句需要的结束字符，这里是)
+			 -->
+			 
+	</delete>
+	
 </mapper>
 

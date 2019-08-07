@@ -42,6 +42,13 @@ public class NotebookController {
 		return new JSONResult(notebook);
 	}
 	
+	@RequestMapping("/page.do")
+	@ResponseBody
+	public JSONResult page(String userId,int page) {
+		List<Map<String, Object>> list = notebookservice.findNotebookByUserId(userId, page);
+		return new JSONResult(list);
+	}
+	
 	/**
 	 *	 笔记本列表异常 
 	 * 

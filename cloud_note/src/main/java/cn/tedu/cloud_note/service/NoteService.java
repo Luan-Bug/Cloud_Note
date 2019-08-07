@@ -18,7 +18,7 @@ public interface NoteService {
 		    throws BookError;
 	List<Note> findNoteByuserId(String userId)
 			throws BookError;
-	int deleteNotebynoteId(String noteId)
+	int deleteNotebynoteId(String... noteId)
 			throws BookError;
 	int reovkeNote(String noteId,String nId)
 			throws BookError;

@@ -9,4 +9,6 @@ public interface NotebookService {
 				throws UserNotFoundException;
 	public Map<String, Object> addNotebook(String name,String userId) 
 				throws BookError;
+	public List<Map<String, Object>> findNotebookByUserId(String id,int page)
+			throws UserNotFoundException;
 }

@@ -77,5 +77,16 @@ public class notebooktest extends cloud_note_test.Test {
 		Map<String, Object> notebook = dao.findNotebookbyNoteBookId(notebookid);
 		System.out.println(notebook);
 	}
+	
+	@Test
+	public void FinfbookBypageSizeServicetest() {
+		String id = "48595f52-b22c-4485-9244-f4004255b972";
+		List<Map<String, Object>> list = service.findNotebookByUserId(id, 2);
+		for(Map<String, Object> map :list) {
+			System.out.println(map);
+		}
+	}
+	
+	
 }
 

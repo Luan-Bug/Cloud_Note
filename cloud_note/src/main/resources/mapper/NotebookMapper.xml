@@ -66,5 +66,16 @@
 			 #{createtime}
 			 )
 	</insert>
+	
+	<select id="findNotebookByPage" resultType="map">
+		select 
+			cn_notebook_id as id,
+			cn_notebook_name as name 
+		from 
+			${table}
+		where
+			cn_user_id = #{userId} 
+		limit #{start},#{pagesize}
+	</select>
 </mapper>
 
